@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import "./index.css";
 
 import Home from "./Pages/Home";
 import About from "./Pages/About";
@@ -13,73 +13,40 @@ import AnimatedBackground from "./components/Background";
 import Navbar from "./components/Navbar";
 import ProjectDetails from "./components/ProjectDetail";
 
-import { supabase } from "./supabase";
+import { AnimatePresence } from "framer-motion";
 
-/* ---------- Landing Page ---------- */
+
 function LandingPage({ showWelcome, setShowWelcome }) {
   return (
     <>
-      {/* Welcome Screen */}
       <AnimatePresence mode="wait">
         {showWelcome && (
-          <WelcomeScreen
-            key="welcome"
-            onLoadingComplete={() => setShowWelcome(false)}
-          />
+          <WelcomeScreen onLoadingComplete={() => setShowWelcome(false)} />
         )}
       </AnimatePresence>
 
-      {/* Main Content */}
       {!showWelcome && (
-        <motion.div
-          key="main-content"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
-        >
+        <>
           <Navbar />
           <AnimatedBackground />
           <Home />
           <About />
           <Portofolio />
           <ContactPage />
-        </motion.div>
+        </>
       )}
     </>
   );
 }
 
-/* ---------- App ---------- */
+const ProjectPageLayout = () => (
+  <>
+    <ProjectDetails />
+  </>
+);
+
 function App() {
   const [showWelcome, setShowWelcome] = useState(true);
-
-  // ❗ Safety check Supabase
-  if (!supabase) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "#0b0b1a",
-          color: "white",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          textAlign: "center",
-          padding: "2rem",
-        }}
-      >
-        <div>
-          <h2>⚠️ Configuration Error</h2>
-          <p>Supabase environment variables belum dikonfigurasi.</p>
-          <small>
-            Pastikan <b>VITE_SUPABASE_URL</b> dan{" "}
-            <b>VITE_SUPABASE_ANON_KEY</b> sudah diset di Vercel.
-          </small>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <BrowserRouter>
@@ -93,7 +60,7 @@ function App() {
             />
           }
         />
-        <Route path="/project/:id" element={<ProjectDetails />} />
+        <Route path="/project/:id" element={<ProjectPageLayout />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
