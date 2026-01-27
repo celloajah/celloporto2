@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 import Home from "./Pages/Home";
 import About from "./Pages/About";
@@ -31,14 +31,20 @@ function LandingPage({ showWelcome, setShowWelcome }) {
 
       {/* Main Content */}
       {!showWelcome && (
-        <div key="main-content">
+        <motion.div
+          key="main-content"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <Navbar />
           <AnimatedBackground />
           <Home />
           <About />
           <Portofolio />
           <ContactPage />
-        </div>
+        </motion.div>
       )}
     </>
   );
@@ -48,7 +54,7 @@ function LandingPage({ showWelcome, setShowWelcome }) {
 function App() {
   const [showWelcome, setShowWelcome] = useState(true);
 
-  // ❗ Supabase safety check (tidak bikin blank)
+  // ❗ Safety check Supabase
   if (!supabase) {
     return (
       <div
