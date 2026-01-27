@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
-import "./index.css";
 
 import Home from "./Pages/Home";
 import About from "./Pages/About";
@@ -14,7 +13,6 @@ import Navbar from "./components/Navbar";
 import ProjectDetails from "./components/ProjectDetail";
 
 import { AnimatePresence } from "framer-motion";
-
 
 function LandingPage({ showWelcome, setShowWelcome }) {
   return (
@@ -39,12 +37,6 @@ function LandingPage({ showWelcome, setShowWelcome }) {
   );
 }
 
-const ProjectPageLayout = () => (
-  <>
-    <ProjectDetails />
-  </>
-);
-
 function App() {
   const [showWelcome, setShowWelcome] = useState(true);
 
@@ -60,7 +52,7 @@ function App() {
             />
           }
         />
-        <Route path="/project/:id" element={<ProjectPageLayout />} />
+        <Route path="/project/:id" element={<ProjectDetails />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
