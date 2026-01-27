@@ -81,7 +81,6 @@ const WORDS = ["Network & Telecom Student", "Tech Enthusiast"];
 const TECH_STACK = ["React", "Javascript", "Node.js", "Tailwind"];
 const SOCIAL_LINKS = [
   { icon: Github, link: "https://github.com/EkiZR" },
-  { icon: Linkedin, link: "https://www.linkedin.com/in/ekizr/" },
   { icon: Instagram, link: "https://www.instagram.com/ekizr._/?hl=id" }
 ];
 
@@ -143,7 +142,7 @@ const Home = () => {
 
   // Lottie configuration
   const lottieOptions = {
-    src: "https://lottie.host/4953c6ff-f8b0-45cd-b667-baf472bba2ae/EHnn08K4mW.lottie",
+    src: "Animation - 1733236381489.json",
     loop: true,
     autoplay: true,
     rendererSettings: {
