@@ -21,11 +21,17 @@ import { Code, Award, Boxes } from "lucide-react";
 const ToggleButton = ({ onClick, isShowingMore }) => (
   <button
     onClick={onClick}
-    className="px-3 py-1.5 text-slate-300 hover:text-white text-sm font-medium
-      transition-all duration-300 flex items-center gap-2 bg-white/5 hover:bg-white/10
-      rounded-md border border-white/10 hover:border-white/20 backdrop-blur-sm group"
+    className="
+      px-4 py-2 text-sm font-medium rounded-lg
+      bg-[var(--glass-bg)] border border-[var(--border-soft)]
+      text-[var(--text-main)] hover:text-white
+      relative overflow-hidden
+    "
   >
-    {isShowingMore ? "See Less" : "See More"}
+    <span className="absolute inset-0 bg-gradient-to-r from-[var(--red-main)] to-[var(--red-soft)] opacity-20 blur-lg"></span>
+    <span className="relative">
+      {isShowingMore ? "See Less" : "See More"}
+    </span>
   </button>
 );
 
@@ -64,7 +70,7 @@ const techStacks = [
   { icon: "SweetAlert.svg", language: "SweetAlert2" },
 ];
 
-/* ================= MAIN COMPONENT ================= */
+/* ================= MAIN ================= */
 export default function Portofolio() {
   const [value, setValue] = useState(0);
   const [projects, setProjects] = useState([]);
@@ -73,26 +79,21 @@ export default function Portofolio() {
   const [showAllCertificates, setShowAllCertificates] = useState(false);
   const [initialItems, setInitialItems] = useState(6);
 
-  /* ✅ AMAN SSR */
   useEffect(() => {
     if (window.innerWidth < 768) setInitialItems(4);
   }, []);
 
-  /* AOS */
   useEffect(() => {
     AOS.init({ once: false });
   }, []);
 
-  /* FETCH SUPABASE */
   const fetchData = useCallback(async () => {
     try {
-      const [{ data: projectData, error: projectError }, { data: certData, error: certError }] =
+      const [{ data: projectData }, { data: certData }] =
         await Promise.all([
-          supabase.from("projects").select("*").order("id", { ascending: true }),
-          supabase.from("certificates").select("*").order("id", { ascending: true }),
+          supabase.from("projects").select("*").order("id"),
+          supabase.from("certificates").select("*").order("id"),
         ]);
-
-      if (projectError || certError) throw projectError || certError;
 
       setProjects(projectData || []);
       setCertificates(certData || []);
@@ -100,7 +101,7 @@ export default function Portofolio() {
       localStorage.setItem("projects", JSON.stringify(projectData || []));
       localStorage.setItem("certificates", JSON.stringify(certData || []));
     } catch (err) {
-      console.error("Supabase error:", err.message);
+      console.error(err);
     }
   }, []);
 
@@ -118,37 +119,72 @@ export default function Portofolio() {
   const displayedCertificates = showAllCertificates ? certificates : certificates.slice(0, initialItems);
 
   return (
-    <div className="md:px-[10%] px-[5%] w-full mt-12 bg-[#030014]" id="Portofolio">
-
+    <section
+      id="Portofolio"
+      className="
+        relative w-full mt-20 px-[5%] md:px-[10%]
+        bg-transparent
+      "
+    >
       {/* HEADER */}
-      <div className="text-center pb-10" data-aos="fade-up">
-        <h2 className="text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">
-          Portfolio Showcase
+      <div className="text-center pb-12" data-aos="fade-up">
+        <h2 className="
+          text-4xl md:text-6xl font-bold
+          bg-gradient-to-r from-[var(--red-main)] to-[var(--red-soft)]
+          bg-clip-text text-transparent
+        ">
+          Portfolio
         </h2>
-        <p className="text-slate-400 mt-2">
+        <p className="text-[var(--text-muted)] mt-3">
           Projects, certificates, and tech stack I’ve worked with.
         </p>
       </div>
 
       {/* TABS */}
-      <AppBar position="static" sx={{ bgcolor: "transparent" }} elevation={0}>
-        <Tabs value={value} onChange={(e, v) => setValue(v)} variant="fullWidth">
-          <Tab icon={<Code />} label="Projects" />
-          <Tab icon={<Award />} label="Certificates" />
-          <Tab icon={<Boxes />} label="Tech Stack" />
-        </Tabs>
-      </AppBar>
+      <AppBar position="static" elevation={0} sx={{ bgcolor: "transparent" }}>
+  <Tabs
+    value={value}
+    onChange={(e, v) => setValue(v)}
+    variant="fullWidth"
+    textColor="inherit"
+    TabIndicatorProps={{
+      style: {
+        background: "linear-gradient(90deg, #ef4444, #fb7185)",
+        height: "3px",
+      },
+    }}
+    sx={{
+      "& .MuiTab-root": {
+        color: "#ffffff",                // 👈 DEFAULT PUTIH
+        fontWeight: 500,
+        transition: "all .3s ease",
+      },
+      "& .MuiTab-root.Mui-selected": {
+        color: "#ef4444",                // 👈 AKTIF MERAH NEON
+        textShadow: "0 0 12px rgba(239,68,68,.6)",
+      },
+      "& .MuiSvgIcon-root": {
+        color: "inherit",                // 👈 ICON IKUT WARNA TEXT
+      },
+    }}
+  >
+    <Tab icon={<Code />} label="Projects" />
+    <Tab icon={<Award />} label="Certificates" />
+    <Tab icon={<Boxes />} label="Tech Stack" />
+  </Tabs>
+</AppBar>
+
 
       {/* PROJECTS */}
       <TabPanel value={value} index={0}>
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
           {displayedProjects.map((p, i) => (
             <CardProject key={p.id || i} {...p} />
           ))}
         </div>
 
         {projects.length > initialItems && (
-          <div className="mt-6">
+          <div className="mt-8 flex justify-center">
             <ToggleButton
               onClick={() => setShowAllProjects(!showAllProjects)}
               isShowingMore={showAllProjects}
@@ -159,7 +195,7 @@ export default function Portofolio() {
 
       {/* CERTIFICATES */}
       <TabPanel value={value} index={1}>
-        <div className="grid md:grid-cols-3 gap-5">
+        <div className="grid md:grid-cols-3 gap-6">
           {displayedCertificates.map((c, i) => (
             <Certificate key={c.id || i} ImgSertif={c.Img} />
           ))}
@@ -170,10 +206,14 @@ export default function Portofolio() {
       <TabPanel value={value} index={2}>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
           {techStacks.map((t, i) => (
-            <TechStackIcon key={i} TechStackIcon={t.icon} Language={t.language} />
+            <TechStackIcon
+              key={i}
+              TechStackIcon={t.icon}
+              Language={t.language}
+            />
           ))}
         </div>
       </TabPanel>
-    </div>
+    </section>
   );
 }
