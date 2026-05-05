@@ -59,12 +59,12 @@ const AboutPage = () => {
           </h2>
 
           <p className="text-lg text-gray-400 leading-relaxed text-justify">
-            Seorang Pelajar RPL yang berfokus pada Front-End Development dan
+            Seorang Tamatan RPL yang berfokus pada Front-End Development dan
             menciptakan pengalaman digital modern dan efektif.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <a href="https://drive.google.com/file/d/1tNz2yF3w_iVo4Nc9oYYnC-DsXyFfH5gL/view?usp=sharing" target="_blank" rel="noreferrer">
+            <a href="https://drive.google.com/file/d/1WQ8-VbqwXWypIQQkWcJXOv6H79QyaatM/view?usp=sharing" target="_blank" rel="noreferrer">
               <button className="px-6 py-3 rounded-lg bg-gradient-to-r 
               from-red-500 to-pink-500 shadow-[0_0_25px_rgba(239,68,68,0.45)]
               hover:scale-105 transition">
